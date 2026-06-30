@@ -19,6 +19,7 @@ const initialState: IssuesState = {
   items: [],
   total: 0,
   loading: false,
+  initiallyLoaded: false,
   error: null,
   currentIssue: null,
 }
@@ -98,11 +99,12 @@ interface Action {
 export function issuesReducer(state = initialState, action: Action): IssuesState {
   switch (action.type) {
     case LIST_REQUEST:
+      return { ...state, loading: !state.initiallyLoaded, error: null }
     case GET_REQUEST:
       return { ...state, loading: true, error: null }
     case LIST_SUCCESS: {
       const payload = action.payload as { items: Issue[]; total: number }
-      return { ...state, loading: false, items: payload.items, total: payload.total }
+      return { ...state, loading: false, items: payload.items, total: payload.total, initiallyLoaded: true }
     }
     case LIST_FAILURE:
     case GET_FAILURE:

@@ -24,6 +24,7 @@ export interface IssuesState {
   items: Issue[]
   total: number
   loading: boolean
+  initiallyLoaded: boolean
   error: string | null
   currentIssue: Issue | null
 }
