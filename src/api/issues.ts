@@ -11,6 +11,7 @@ export async function fetchIssues(filter: IssuesFilter) {
   if (filter.search) params.q = filter.search
   if (filter.status) params.status = filter.status
   if (filter.priority) params.priority = filter.priority
+  if (filter.assignee) params.assignee_like = filter.assignee
   const res = await client.get<Issue[]>('/issues', { params })
   return { items: res.data, total: Number(res.headers['x-total-count']) }
 }
@@ -21,15 +22,12 @@ export async function fetchIssue(id: number) {
 }
 
 export async function createIssue(data: Omit<Issue, 'id' | 'createdAt'>) {
-  const res = await client.post<Issue>('/issues', {
-    ...data,
-    createdAt: new Date().toISOString(),
-  })
+  const res = await client.post<Issue>('/issues', { ...data, createdAt: new Date().toISOString() })
   return res.data
 }
 
 export async function updateIssue(id: number, data: Partial<Issue>) {
-  const res = await client.put<Issue>(`/issues/${id}`, data)
+  const res = await client.patch<Issue>(`/issues/${id}`, data)
   return res.data
 }
 

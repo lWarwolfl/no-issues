@@ -17,6 +17,7 @@ export interface IssuesFilter {
   search: string
   status?: string
   priority?: string
+  assignee?: string
 }
 
 export interface IssuesState {

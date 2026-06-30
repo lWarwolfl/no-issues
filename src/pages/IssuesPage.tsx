@@ -14,6 +14,9 @@ import {
   TableSortLabel,
   Typography,
   Chip,
+  MenuItem,
+  Alert,
+  Stack,
 } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { fetchIssues } from '@/store/issuesSlice'
@@ -28,11 +31,15 @@ const priorityColor: Record<string, 'error' | 'warning' | 'default'> = {
   Low: 'default',
 }
 
+const statusOptions = ['', 'Open', 'In Progress', 'Done', 'Closed']
+const priorityOptions = ['', 'Low', 'Medium', 'High']
+
 export default function IssuesPage() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { items, total, loading } = useAppSelector((s) => s.issues)
-  const { page, limit, sort, order, search, setFilter, toggleSort } = useIssuesFilter()
+  const { items, total, loading, error } = useAppSelector((s) => s.issues)
+  const { page, limit, sort, order, search, status, priority, assignee, setFilter, toggleSort } =
+    useIssuesFilter()
 
   const [searchInput, setSearchInput] = useState(search)
   const debouncedSearch = useDebounce(searchInput, 400)
@@ -42,28 +49,76 @@ export default function IssuesPage() {
   }, [debouncedSearch])
 
   useEffect(() => {
-    dispatch(fetchIssues({ page, limit, sort, order, search }))
-  }, [dispatch, page, limit, sort, order, search])
+    dispatch(fetchIssues({ page, limit, sort, order, search, status, priority, assignee }))
+  }, [dispatch, page, limit, sort, order, search, status, priority, assignee])
 
   return (
     <Box>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+      <Box
+        display="flex"
+        flexDirection={{ xs: 'column', sm: 'row' }}
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        justifyContent="space-between"
+        mb={2}
+        gap={1}
+      >
         <Typography variant="h5" fontWeight={700}>
           Issues
         </Typography>
-        <Box display="flex" gap={1}>
+        <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
           <Button variant="contained" size="small" onClick={() => navigate('/new')}>
             New Issue
           </Button>
           <TextField
+            select
             size="small"
-            placeholder="Search issues..."
+            label="Status"
+            value={status}
+            onChange={(e) => setFilter({ status: e.target.value, page: '1' })}
+            sx={{ minWidth: 120 }}
+          >
+            {statusOptions.map((o) => (
+              <MenuItem key={o} value={o}>
+                {o || 'All'}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            size="small"
+            label="Priority"
+            value={priority}
+            onChange={(e) => setFilter({ priority: e.target.value, page: '1' })}
+            sx={{ minWidth: 120 }}
+          >
+            {priorityOptions.map((o) => (
+              <MenuItem key={o} value={o}>
+                {o || 'All'}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            size="small"
+            label="Assignee"
+            value={assignee}
+            onChange={(e) => setFilter({ assignee: e.target.value, page: '1' })}
+            sx={{ minWidth: 140 }}
+          />
+          <TextField
+            size="small"
+            placeholder="Search..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            sx={{ width: 300 }}
+            sx={{ minWidth: 180 }}
           />
-        </Box>
+        </Stack>
       </Box>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       <TableContainer component={Paper}>
         <Table>
@@ -130,6 +185,12 @@ export default function IssuesPage() {
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   Loading...
+                </TableCell>
+              </TableRow>
+            ) : items.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.secondary' }}>
+                  {error ? 'An error occurred while fetching issues.' : 'No issues found.'}
                 </TableCell>
               </TableRow>
             ) : (

@@ -7,17 +7,20 @@ export function useIssuesFilter() {
   const page = Number(searchParams.get('page')) || 1
   const limit = Number(searchParams.get('limit')) || 10
   const sort = searchParams.get('sort') || 'createdAt'
-  const order = (searchParams.get('order') as 'asc' | 'desc') || 'desc'
+  const order = (searchParams.get('order') || 'desc') as 'asc' | 'desc'
   const search = searchParams.get('q') || ''
+  const status = searchParams.get('status') || ''
+  const priority = searchParams.get('priority') || ''
+  const assignee = searchParams.get('assignee') || ''
 
   const setFilter = useCallback(
     (updates: Record<string, string>) => {
       setSearchParams((prev) => {
         const next = new URLSearchParams(prev)
-        Object.entries(updates).forEach(([k, v]) => {
-          if (v) next.set(k, v)
-          else next.delete(k)
-        })
+        for (const [key, value] of Object.entries(updates)) {
+          if (value) next.set(key, value)
+          else next.delete(key)
+        }
         return next
       })
     },
@@ -25,16 +28,15 @@ export function useIssuesFilter() {
   )
 
   const toggleSort = useCallback(
-    (column: string) => {
+    (field: string) => {
       setSearchParams((prev) => {
         const next = new URLSearchParams(prev)
-        if (next.get('sort') === column) {
+        if (next.get('sort') === field) {
           next.set('order', next.get('order') === 'asc' ? 'desc' : 'asc')
         } else {
-          next.set('sort', column)
+          next.set('sort', field)
           next.set('order', 'asc')
         }
-        next.set('page', '1')
         return next
       })
     },
@@ -47,8 +49,10 @@ export function useIssuesFilter() {
     sort,
     order,
     search,
+    status,
+    priority,
+    assignee,
     setFilter,
     toggleSort,
-    setSearchParams,
-  }
+  } as const
 }
