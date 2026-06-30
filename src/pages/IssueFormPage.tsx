@@ -39,7 +39,7 @@ export default function IssueFormPage() {
       assignee: '',
       dueDate: '',
     },
-    mode: 'onBlur',
+    mode: 'onTouched',
   })
 
   useEffect(() => {
@@ -204,7 +204,7 @@ export default function IssueFormPage() {
           <Button variant="outlined" onClick={() => navigate(-1)}>
             Cancel
           </Button>
-          <Button type="submit" variant="contained" disabled={!isValid || isSubmitting}>
+          <Button type="submit" variant="contained" disabled={isSubmitting}>
             {isEdit ? 'Save Changes' : 'Create'}
           </Button>
         </Box>
