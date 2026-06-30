@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import IssuesPage from '@/pages/IssuesPage'
 import IssueDetailsPage from '@/pages/IssueDetailsPage'
@@ -10,11 +10,10 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Navigate to="/issues" replace />} />
-          <Route path="/issues" element={<IssuesPage />} />
-          <Route path="/issues/new" element={<IssueFormPage />} />
-          <Route path="/issues/:id" element={<IssueDetailsPage />} />
-          <Route path="/issues/:id/edit" element={<IssueFormPage />} />
+          <Route index element={<IssuesPage />} />
+          <Route path="new" element={<IssueFormPage />} />
+          <Route path=":id" element={<IssueDetailsPage />} />
+          <Route path=":id/edit" element={<IssueFormPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
