@@ -35,13 +35,10 @@ export default function IssueDetailsPage() {
   }, [dispatch, id])
 
   const handleDelete = async () => {
-    try {
-      await dispatch(deleteIssue(Number(id)))
-      dispatch(showToast('Issue deleted', 'success'))
-      navigate('/')
-    } catch {
-      dispatch(showToast('Failed to delete issue', 'error'))
-    }
+    setOpen(false)
+    await dispatch(deleteIssue(Number(id)))
+    dispatch(showToast('Issue deleted', 'success'))
+    navigate('/')
   }
 
   if (loading || !currentIssue) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   Box,
   TextField,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -50,13 +51,18 @@ export default function IssuesPage() {
         <Typography variant="h5" fontWeight={700}>
           Issues
         </Typography>
-        <TextField
-          size="small"
-          placeholder="Search issues..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          sx={{ width: 300 }}
-        />
+        <Box display="flex" gap={1}>
+          <Button variant="contained" size="small" onClick={() => navigate('/new')}>
+            New Issue
+          </Button>
+          <TextField
+            size="small"
+            placeholder="Search issues..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            sx={{ width: 300 }}
+          />
+        </Box>
       </Box>
 
       <TableContainer component={Paper}>

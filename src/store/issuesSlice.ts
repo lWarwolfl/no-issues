@@ -1,5 +1,6 @@
 import { IssuesState, Issue, IssuesFilter } from '@/types'
 import * as issuesApi from '@/api/issues'
+import { showToast } from '@/store/uiSlice'
 
 const LIST_REQUEST = 'issues/list/request'
 const LIST_SUCCESS = 'issues/list/success'
@@ -28,7 +29,9 @@ export function fetchIssues(filter: IssuesFilter) {
       const result = await issuesApi.fetchIssues(filter)
       dispatch({ type: LIST_SUCCESS, payload: result })
     } catch (e: any) {
-      dispatch({ type: LIST_FAILURE, payload: e?.message ?? 'Failed to fetch issues' })
+      const msg = e?.message ?? 'Failed to fetch issues'
+      dispatch({ type: LIST_FAILURE, payload: msg })
+      dispatch(showToast(msg, 'error'))
     }
   }
 }
@@ -40,29 +43,49 @@ export function fetchIssue(id: number) {
       const issue = await issuesApi.fetchIssue(id)
       dispatch({ type: GET_SUCCESS, payload: issue })
     } catch (e: any) {
-      dispatch({ type: GET_FAILURE, payload: e?.message ?? 'Failed to fetch issue' })
+      const msg = e?.message ?? 'Failed to fetch issue'
+      dispatch({ type: GET_FAILURE, payload: msg })
+      dispatch(showToast(msg, 'error'))
     }
   }
 }
 
 export function createIssue(data: Omit<Issue, 'id' | 'createdAt'>) {
   return async (dispatch: any) => {
-    await issuesApi.createIssue(data)
-    dispatch({ type: CREATE_SUCCESS })
+    try {
+      await issuesApi.createIssue(data)
+      dispatch({ type: CREATE_SUCCESS })
+    } catch (e: any) {
+      const msg = e?.message ?? 'Failed to create issue'
+      dispatch(showToast(msg, 'error'))
+      throw e
+    }
   }
 }
 
 export function updateIssue(id: number, data: Partial<Issue>) {
   return async (dispatch: any) => {
-    await issuesApi.updateIssue(id, data)
-    dispatch({ type: UPDATE_SUCCESS })
+    try {
+      await issuesApi.updateIssue(id, data)
+      dispatch({ type: UPDATE_SUCCESS })
+    } catch (e: any) {
+      const msg = e?.message ?? 'Failed to update issue'
+      dispatch(showToast(msg, 'error'))
+      throw e
+    }
   }
 }
 
 export function deleteIssue(id: number) {
   return async (dispatch: any) => {
-    await issuesApi.deleteIssue(id)
-    dispatch({ type: DELETE_SUCCESS })
+    try {
+      await issuesApi.deleteIssue(id)
+      dispatch({ type: DELETE_SUCCESS })
+    } catch (e: any) {
+      const msg = e?.message ?? 'Failed to delete issue'
+      dispatch(showToast(msg, 'error'))
+      throw e
+    }
   }
 }
 
@@ -84,11 +107,9 @@ export function issuesReducer(state = initialState, action: Action): IssuesState
     case GET_SUCCESS:
       return { ...state, loading: false, currentIssue: action.payload }
     case CREATE_SUCCESS:
-      return { ...state }
     case UPDATE_SUCCESS:
-      return { ...state }
     case DELETE_SUCCESS:
-      return { ...state }
+      return state
     default:
       return state
   }
