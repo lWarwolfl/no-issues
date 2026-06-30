@@ -12,24 +12,10 @@ import {
 } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { fetchIssue, createIssue, updateIssue } from '@/store/issuesSlice'
 import { showToast } from '@/store/uiSlice'
-
-const issueSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(200),
-  description: z.string().min(1, 'Description is required'),
-  status: z.enum(['Open', 'In Progress', 'Done', 'Closed']),
-  priority: z.enum(['Critical', 'High', 'Medium', 'Low']),
-  assignee: z.string().min(1, 'Assignee is required'),
-  dueDate: z.string().min(1, 'Due date is required'),
-})
-
-type IssueFormData = z.infer<typeof issueSchema>
-
-const statusOptions = ['Open', 'In Progress', 'Done', 'Closed']
-const priorityOptions = ['Critical', 'High', 'Medium', 'Low']
+import { issueSchema, IssueFormData, statusOptions, priorityOptions } from '@/schemas/issueSchema'
 
 export default function IssueFormPage() {
   const { id } = useParams()

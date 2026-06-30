@@ -1,52 +1,41 @@
 # Issue Tracker
 
-A simple Issue Tracker built with React, TypeScript, and Redux.
+React + TypeScript + Redux issue tracker.
 
-## Getting Started
+## Run
 
 ```bash
 npm install
-
-# Terminal 1 — start the mock API
-npm run serve:api
-
-# Terminal 2 — start the dev server
-npm run dev
+npm run serve:api   # Terminal 1 — json-server on :3001
+npm run dev         # Terminal 2 — Vite on :5173
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open [http://localhost:5173](http://localhost:5173).
 
-## Tech Stack
+## Stack
 
-- **React 19** + **TypeScript 5**
-- **Redux** (vanilla, no Toolkit) + redux-thunk
-- **React Router** v6
-- **Material UI** v7
-- **Axios** for HTTP requests
-- **Zod** + **React Hook Form** for form validation
-- **SCSS** for custom styles
-- **Vite** for building
-- **json-server** for the mock API
+React 19, TS 5, Redux (vanilla + thunk), React Router 6, MUI 7, Axios, Zod + React Hook Form, SCSS, Vite.
 
-## Project Structure
+## Structure
 
 ```
 src/
-├── api/          # API communication layer (Axios client)
-├── components/   # Shared components (Navbar, Layout, Toast)
-├── hooks/        # Custom hooks (useDebounce, useIssuesFilter)
+├── api/          # Axios client + endpoints
+├── components/   # Navbar, Layout, Toast
+├── hooks/        # useDebounce, useIssuesFilter
 ├── pages/        # Route pages
-├── store/        # Redux state management
-├── styles/       # SCSS styles
-└── types/        # TypeScript type definitions
+├── schemas/      # Zod schemas
+├── store/        # Redux slices
+├── styles/       # SCSS
+└── types/        # TS interfaces
 ```
 
 ## Features
 
-- **Issue list** with pagination, sorting, search, and multi-field filters
-- **Issue detail** with edit and delete actions
-- **Create & edit** with full form validation
-- **Loading, empty, and error** state handling
-- **Toast notifications** for all API events
-- **URL-synced filters** that survive page refresh
-- **Responsive layout** with Material UI
+- Issue list with pagination, sorting, search, status/priority/assignee filters
+- Issue detail with edit and delete
+- Create & edit with Zod + RHF validation
+- Loading, empty, error states
+- Toast on API errors
+- URL-synced filters
+- MUI responsive layout
