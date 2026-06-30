@@ -104,7 +104,13 @@ export function issuesReducer(state = initialState, action: Action): IssuesState
       return { ...state, loading: true, error: null }
     case LIST_SUCCESS: {
       const payload = action.payload as { items: Issue[]; total: number }
-      return { ...state, loading: false, items: payload.items, total: payload.total, initiallyLoaded: true }
+      return {
+        ...state,
+        loading: false,
+        items: payload.items,
+        total: payload.total,
+        initiallyLoaded: true,
+      }
     }
     case LIST_FAILURE:
     case GET_FAILURE:

@@ -17,9 +17,10 @@ import { useAppDispatch, useAppSelector } from '@/store'
 import { fetchIssue, deleteIssue } from '@/store/issuesSlice'
 import { showToast } from '@/store/uiSlice'
 
-const priorityColor: Record<string, 'error' | 'warning' | 'default'> = {
-  High: 'error',
-  Medium: 'warning',
+const priorityColor: Record<string, 'error' | 'warning' | 'info' | 'default'> = {
+  Critical: 'error',
+  High: 'warning',
+  Medium: 'info',
   Low: 'default',
 }
 

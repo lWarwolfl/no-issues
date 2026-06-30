@@ -25,14 +25,15 @@ import { useDebounce } from '@/hooks/useDebounce'
 import { useNavigate } from 'react-router-dom'
 import type { Issue } from '@/types'
 
-const priorityColor: Record<string, 'error' | 'warning' | 'default'> = {
-  High: 'error',
-  Medium: 'warning',
+const priorityColor: Record<string, 'error' | 'warning' | 'info' | 'default'> = {
+  Critical: 'error',
+  High: 'warning',
+  Medium: 'info',
   Low: 'default',
 }
 
 const statusOptions = ['', 'Open', 'In Progress', 'Done', 'Closed']
-const priorityOptions = ['', 'Low', 'Medium', 'High']
+const priorityOptions = ['', 'Critical', 'High', 'Medium', 'Low']
 
 export default function IssuesPage() {
   const dispatch = useAppDispatch()
