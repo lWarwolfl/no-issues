@@ -1,5 +1,5 @@
 import client from '@/api/client'
-import { Issue, IssuesFilter } from '@/types'
+import { Issue, IssuesFilter, UpdateIssueData, CreateIssueData } from '@/types'
 
 export async function fetchIssues(filter: IssuesFilter) {
   const params: Record<string, string | number> = {
@@ -21,12 +21,12 @@ export async function fetchIssue(id: number) {
   return res.data
 }
 
-export async function createIssue(data: Omit<Issue, 'id' | 'createdAt'>) {
+export async function createIssue(data: CreateIssueData) {
   const res = await client.post<Issue>('/issues', { ...data, createdAt: new Date().toISOString() })
   return res.data
 }
 
-export async function updateIssue(id: number, data: Partial<Issue>) {
+export async function updateIssue(id: number, data: UpdateIssueData) {
   const res = await client.patch<Issue>(`/issues/${id}`, data)
   return res.data
 }

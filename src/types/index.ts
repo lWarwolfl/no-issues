@@ -1,13 +1,19 @@
+export type Priority = 'Critical' | 'High' | 'Medium' | 'Low'
+export type Status = 'Open' | 'In Progress' | 'Done' | 'Closed'
+
 export interface Issue {
   id: number
   title: string
   description: string
-  status: string
-  priority: string
+  status: Status
+  priority: Priority
   assignee: string
   dueDate: string
   createdAt: string
 }
+
+export type UpdateIssueData = Partial<Omit<Issue, 'id' | 'createdAt'>>
+export type CreateIssueData = Omit<Issue, 'id' | 'createdAt'>
 
 export interface IssuesFilter {
   page: number

@@ -36,13 +36,12 @@ export function toastReducer(state = initialState, action: ToastAction): ToastSt
   switch (action.type) {
     case SHOW_TOAST:
       return {
-        ...state,
         open: true,
         message: action.payload.message,
         severity: action.payload.severity,
       }
     case HIDE_TOAST:
-      return { ...state, open: false }
+      return { ...initialState }
     default:
       return state
   }

@@ -45,9 +45,16 @@ export default function IssuesPage() {
   const [searchInput, setSearchInput] = useState(search)
   const debouncedSearch = useDebounce(searchInput, 400)
 
+  const [assigneeInput, setAssigneeInput] = useState(assignee)
+  const debouncedAssignee = useDebounce(assigneeInput, 400)
+
   useEffect(() => {
     setFilter({ q: debouncedSearch || '' })
   }, [debouncedSearch])
+
+  useEffect(() => {
+    setFilter({ assignee: debouncedAssignee || '' })
+  }, [debouncedAssignee])
 
   useEffect(() => {
     dispatch(fetchIssues({ page, limit, sort, order, search, status, priority, assignee }))
@@ -101,8 +108,8 @@ export default function IssuesPage() {
           <TextField
             size="small"
             label="Assignee"
-            value={assignee}
-            onChange={(e) => setFilter({ assignee: e.target.value, page: '1' })}
+            value={assigneeInput}
+            onChange={(e) => setAssigneeInput(e.target.value)}
             sx={{ minWidth: 140 }}
           />
           <TextField

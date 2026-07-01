@@ -1,4 +1,4 @@
-import { IssuesState, Issue, IssuesFilter } from '@/types'
+import type { IssuesState, Issue, IssuesFilter, UpdateIssueData, CreateIssueData } from '@/types'
 import * as issuesApi from '@/api/issues'
 import { showToast } from '@/store/uiSlice'
 import type { AppThunk } from '@/store'
@@ -52,7 +52,7 @@ export function fetchIssue(id: number): AppThunk {
   }
 }
 
-export function createIssue(data: Omit<Issue, 'id' | 'createdAt'>): AppThunk {
+export function createIssue(data: CreateIssueData): AppThunk {
   return async (dispatch) => {
     try {
       await issuesApi.createIssue(data)
@@ -65,7 +65,7 @@ export function createIssue(data: Omit<Issue, 'id' | 'createdAt'>): AppThunk {
   }
 }
 
-export function updateIssue(id: number, data: Partial<Issue>): AppThunk {
+export function updateIssue(id: number, data: UpdateIssueData): AppThunk {
   return async (dispatch) => {
     try {
       await issuesApi.updateIssue(id, data)
@@ -91,32 +91,46 @@ export function deleteIssue(id: number): AppThunk {
   }
 }
 
-interface Action {
-  type: string
-  payload?: unknown
-}
+interface ListRequestAction { type: typeof LIST_REQUEST }
+interface ListSuccessAction { type: typeof LIST_SUCCESS; payload: { items: Issue[]; total: number } }
+interface ListFailureAction { type: typeof LIST_FAILURE; payload: string }
+interface GetRequestAction { type: typeof GET_REQUEST }
+interface GetSuccessAction { type: typeof GET_SUCCESS; payload: Issue }
+interface GetFailureAction { type: typeof GET_FAILURE; payload: string }
+interface CreateSuccessAction { type: typeof CREATE_SUCCESS }
+interface UpdateSuccessAction { type: typeof UPDATE_SUCCESS }
+interface DeleteSuccessAction { type: typeof DELETE_SUCCESS }
 
-export function issuesReducer(state = initialState, action: Action): IssuesState {
+type IssuesAction =
+  | ListRequestAction
+  | ListSuccessAction
+  | ListFailureAction
+  | GetRequestAction
+  | GetSuccessAction
+  | GetFailureAction
+  | CreateSuccessAction
+  | UpdateSuccessAction
+  | DeleteSuccessAction
+
+export function issuesReducer(state = initialState, action: IssuesAction): IssuesState {
   switch (action.type) {
     case LIST_REQUEST:
       return { ...state, loading: !state.initiallyLoaded, error: null }
     case GET_REQUEST:
       return { ...state, loading: true, error: null }
-    case LIST_SUCCESS: {
-      const payload = action.payload as { items: Issue[]; total: number }
+    case LIST_SUCCESS:
       return {
         ...state,
         loading: false,
-        items: payload.items,
-        total: payload.total,
+        items: action.payload.items,
+        total: action.payload.total,
         initiallyLoaded: true,
       }
-    }
     case LIST_FAILURE:
     case GET_FAILURE:
-      return { ...state, loading: false, error: action.payload as string }
+      return { ...state, loading: false, error: action.payload }
     case GET_SUCCESS:
-      return { ...state, loading: false, currentIssue: action.payload as Issue }
+      return { ...state, loading: false, currentIssue: action.payload }
     case CREATE_SUCCESS:
     case UPDATE_SUCCESS:
     case DELETE_SUCCESS:
